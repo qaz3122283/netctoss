@@ -1,0 +1,63 @@
+/**
+ * 
+ */
+package group7netctoss.dao;
+
+import java.util.List;
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Bill;
+import group7netctoss.entity.Service;
+
+
+ 
+/**
+ * @author xx
+ *
+ */
+public interface AccountDao{
+	/*
+	 * 插入账务账号
+	 * */
+	public int insertAccount(Account account);
+	/*
+	 * 删除账务账号
+	 * */
+	public int deleteAccount(Account account);
+	/**
+	 * 修改账务账号
+	 * 
+	 */
+	public int updateAccount(Account account);
+	/*
+	 * 搜索账务账号
+	 * */
+	public Account selectAccount(Account account);
+	/*
+	 * 查询所有账务账号
+	 * */
+	public List<Account> selectAllAccount();
+	
+	public Account selectAccountBySid(Service service);//�����˵�ģ����õ�
+	
+	public Account selectAccountByBid(Bill bill);
+	
+	
+	
+	
+	/**
+	 * @author cbw
+	 * @param accouunt
+	 * @return
+	 * 通过账务id查询账务信息
+	 */
+	public Account selectAccountById(Account accouunt);
+	
+	/**
+	 * @author cbw
+	 * @param account
+	 * @return
+	 * 通过账务账号查询账务信息
+	 */
+	public Account selectAccountByAcc(Account account);
+}

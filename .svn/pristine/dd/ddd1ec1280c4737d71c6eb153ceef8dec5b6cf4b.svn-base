@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.ServiceDao">
+
+	<!-- 查询所有的结果集 -->
+	<sql id = "service">s.ser_id,s.acc_id,s.fee_id,s.ser_os,s.ser_state,s.ser_psw,s.ser_ip,s.ser_createtime,s.ser_recordtime,s.s1,s.s2,s.s3</sql>
+	
+	<!-- 添加业务-->
+	<insert id="insertService" >
+		insert into service(acc_id,fee_id,ser_os,ser_psw,ser_ip,ser_state)
+		value(#{acc_id},#{fee_id},#{ser_os},#{ser_psw},#{ser_ip},#{ser_state})
+	</insert>
+	
+	<!-- 删除业务-->
+	<update id="deleteService">
+		update service set ser_state=#{ser_state},ser_recordtime=now() where ser_id=#{ser_id}
+	</update>
+	
+	<!-- 更新业务-->
+	<insert id="updateService">
+		<!-- 
+		update service set ser_id=#{ser_id} where ser_id=#{ser_id}
+		-->
+		insert into upservice(ser_id,fee_id) value(#{ser_id},#{fee_id})
+	</insert>
+	
+	<resultMap type="Service" id="Service">
+		<id property="ser_id" column="ser_id" />
+		<association property="account" select="group7netctoss.dao.AccountDao.selectAccountById" column="acc_id">
+			<id property="acc_id" column="acc_id"/>
+			<result property="acc_id" column="acc_id"/>
+			<result property="acc_idcard" column="acc_idcard"/>
+			<result property="acc_name" column="acc_name"/>
+		</association>
+		<association property="fee" select="group7netctoss.dao.FeeDao.selectFeeByID" column="fee_id">
+			<id property="fee_id" column="fee_id"/>
+			<result property="fee_id" column="fee_id"/>
+			<result property="fee_name" column="fee_name"/>
+			<result property="fee_comment" column="fee_comment"/>
+		</association>
+	</resultMap>
+	
+		
+	<!-- 查询所有的业务-->
+	<select id="selectService" resultType="Service">
+		select <include refid="service" /> from service s
+	</select>
+	
+	<!-- 通过条件查询所有的业务-->
+	<select id="selectServiceByCondi" resultMap="Service">
+		select <include refid="service" /> from service s 
+		<where>
+			<if test='ser_os!=""'>
+				ser_os=#{ser_os}
+			</if>
+			<if test='ser_ip!=""'>
+				and ser_ip=#{ser_ip}
+			</if>
+			<if test='acc_idcard!=""'>
+				and acc_idcard=#{acc_idcard}
+			</if>
+			<if test='ser_state!="10"'>
+				and ser_state=#{ser_state}
+			</if>			
+		</where>
+	</select>
+	
+	<!-- 通过id查询所有的业务-->
+	<select id="selectServiceById" resultMap="Service">
+		select <include refid="service" /> from service s where ser_id=#{ser_id}
+	</select>
+	
+	<!-- 通过省份证id查询所有的业务-->
+	<select id="selectServiceByIdCard" resultMap="Service" >
+		select <include refid="service" /> from service s,account a where s.acc_id=a.acc_id and a.acc_idcard=#{acc_idcard}
+		<if test='ser_os!=""'>
+			and s.ser_os=#{ser_os}
+		</if>
+		<if test='ser_ip!=""'>
+			and s.ser_ip=#{ser_ip}
+		</if>
+		<if test='ser_state!="10"'>
+			and s.ser_state=#{ser_state}
+		</if>
+	</select>
+	
+	<!-- 通过OS账号所有的业务-->
+	<select id="selectServiceByAccount" resultType="Service">
+		select <include refid="service" /> from service s where ser_os=#{ser_os} and ser_ip=#{ser_ip}
+	</select>
+	
+	
+	<select id="selectServiceAllCount" resultType="Integer">
+		select count(ser_id) from service s 
+	</select>
+
+</mapper>

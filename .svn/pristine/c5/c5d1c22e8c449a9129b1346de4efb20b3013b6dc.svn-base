@@ -1,0 +1,29 @@
+package group7netctoss.service;
+
+import java.util.List;
+
+import group7netctoss.entity.Role;
+
+
+public interface RoleService {
+	/**
+	 * 查询所有Role
+	 */
+	public List<Role> getAllRole();
+	/**
+	 * 添加Role
+	 */
+	public int addRole(Role role);
+	/**
+	 * 删除Role
+	 */
+	public int deleteRole(Role role);
+	/**
+	 * 修改Role
+	 */
+	public int updateRole(Role role);
+	/**
+	 * 用Id查Role
+	 */
+	public Role getRoleById(Role role);
+}

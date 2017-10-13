@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="group7netctoss.dao.BillDetailDao">
+	<resultMap type="BillDetail" id="detailInfo">
+		<id property="det_id" column="det_id"/>
+		<result property="det_ip" column="det_ip"/>
+		<result property="det_intime" column="det_intime"/>
+		<result property="det_outtime" column="det_outtime"/>
+		<result property="det_duration" column="det_duration"/>
+		<result property="det_cost" column="det_cost"/>
+		<association property="item" javaType="billItem">
+			<result property="item_cost" column="item_cost"/>
+			<result property="item_month" column="item_month"/>
+		</association>
+		<association property="ser" javaType="service">
+			<result property="ser_os" column="ser_os"/>
+			<result property="ser_ip" column="ser_ip"/>
+			<association property="account" javaType="account">
+				<result property="acc_login" column="acc_login"/>
+			</association>
+			<association property="fee" javaType="fee">
+				<result property="fee_name" column="fee_name"/>
+			</association>
+		</association>
+	</resultMap> 
+	 
+ 	<select id="selBillDetail" resultMap="detailInfo">
+ 		SELECT a.acc_login,s.ser_os,s.ser_ip,bi.item_month,bi.item_cost,bd.det_ip,bd.det_intime,bd.det_outtime,bd.det_duration,bd.det_cost,f.fee_name
+ 		 FROM billdetail bd JOIN billitem bi ON(bd.item_id=bi.item_id) JOIN service s ON(s.ser_id=bd.ser_id) JOIN account a ON(a.acc_id=s.acc_id) JOIN fee f ON(f.fee_id=s.fee_id)
+ 		 where bi.item_id=#{item.item_id}
+ 	</select>
+ </mapper>

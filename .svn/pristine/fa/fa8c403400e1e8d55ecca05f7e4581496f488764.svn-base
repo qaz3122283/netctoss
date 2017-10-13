@@ -1,0 +1,37 @@
+package group7netctoss.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import group7netctoss.dao.ReportDao;
+import group7netctoss.entity.Report;
+import group7netctoss.service.ReportService;
+
+
+
+@org.springframework.stereotype.Service("reportService")
+public class ReportServiceImpl implements ReportService {
+	
+	@Resource
+	private ReportDao reportDao;
+	
+	@Override
+	public List<Report> getAccountMonthtime() {
+		// TODO Auto-generated method stub
+		return reportDao.selectAccountMonthtime();
+	}
+
+	@Override
+	public List<Report> getSeripUseTimeRank() {
+		// TODO Auto-generated method stub
+		return reportDao.selectSeripUseTimeRank();
+	}
+
+	@Override
+	public List<Report> getSeripFtypeCount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

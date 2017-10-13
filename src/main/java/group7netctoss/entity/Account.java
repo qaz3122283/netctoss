@@ -1,0 +1,195 @@
+/**
+ * 
+ */
+package group7netctoss.entity;
+
+import java.sql.Timestamp;
+
+/**
+ * @author xx
+ *
+ */
+public class Account {
+private int acc_id;
+private String acc_name;
+private String acc_idcard;
+private String acc_login;
+private int acc_state;
+private Timestamp acc_createtime;
+private Timestamp acc_logintime;
+private Timestamp acc_recordtime;
+private String acc_psw;
+private String acc_tel;
+private String acc_ip;
+private String acc_email;
+private int acc_job;
+private int acc_sex;
+private String acc_address;
+private String acc_zipcode;
+private String acc_qq;
+private String acc_recidcard;
+private Bill bill;//账单
+private Double acount_month_sumtime;//用于存储用户月使用时长
+public Account(int acc_id, int acc_state) {
+	super();
+	this.acc_id = acc_id;
+	this.acc_state = acc_state;
+}
+
+public Account() {
+	super();
+}
+
+public Account(int acc_id) {
+	super();
+	this.acc_id = acc_id;
+}
+
+public Account(int acc_id, String acc_name, String acc_idcard, String acc_login) {
+	super();
+	this.acc_id = acc_id;
+	this.acc_name = acc_name;
+	this.acc_idcard = acc_idcard;
+	this.acc_login = acc_login;
+}
+
+//构造用户每月使用总时长记录
+public Account(int acc_id, String acc_name, String acc_idcard, String acc_login, String acc_tel, Bill bill,
+		Double acount_month_sumtime) {
+	super();
+	this.acc_id = acc_id;
+	this.acc_name = acc_name;
+	this.acc_idcard = acc_idcard;
+	this.acc_login = acc_login;
+	this.acc_tel = acc_tel;
+	this.bill = bill;
+	this.acount_month_sumtime = acount_month_sumtime;
+}
+
+
+public int getAcc_id() {
+	return acc_id;
+}
+public void setAcc_id(int acc_id) {
+	this.acc_id = acc_id;
+}
+public String getAcc_name() {
+	return acc_name;
+}
+public void setAcc_name(String acc_name) {
+	this.acc_name = acc_name;
+}
+public String getAcc_idcard() {
+	return acc_idcard;
+}
+public void setAcc_idcard(String acc_idcard) {
+	this.acc_idcard = acc_idcard;
+}
+public String getAcc_login() {
+	return acc_login;
+}
+public void setAcc_login(String acc_login) {
+	this.acc_login = acc_login;
+}
+public int getAcc_state() {
+	return acc_state;
+}
+public void setAcc_state(int acc_state) {
+	this.acc_state = acc_state;
+}
+public Timestamp getAcc_createtime() {
+	return acc_createtime;
+}
+public void setAcc_createtime(Timestamp acc_createtime) {
+	this.acc_createtime = acc_createtime;
+}
+public Timestamp getAcc_logintime() {
+	return acc_logintime;
+}
+public void setAcc_logintime(Timestamp acc_logintime) {
+	this.acc_logintime = acc_logintime;
+}
+public Timestamp getAcc_recordtime() {
+	return acc_recordtime;
+}
+public void setAcc_recordtime(Timestamp acc_recordtime) {
+	this.acc_recordtime = acc_recordtime;
+}
+public String getAcc_psw() {
+	return acc_psw;
+}
+public void setAcc_psw(String acc_psw) {
+	this.acc_psw = acc_psw;
+}
+public String getAcc_tel() {
+	return acc_tel;
+}
+public void setAcc_tel(String acc_tel) {
+	this.acc_tel = acc_tel;
+}
+public String getAcc_ip() {
+	return acc_ip;
+}
+public void setAcc_ip(String acc_ip) {
+	this.acc_ip = acc_ip;
+}
+public String getAcc_email() {
+	return acc_email;
+}
+public void setAcc_email(String acc_email) {
+	this.acc_email = acc_email;
+}
+public int getAcc_job() {
+	return acc_job;
+}
+public void setAcc_job(int acc_job) {
+	this.acc_job = acc_job;
+}
+public int getAcc_sex() {
+	return acc_sex;
+}
+public void setAcc_sex(int acc_sex) {
+	this.acc_sex = acc_sex;
+}
+public String getAcc_address() {
+	return acc_address;
+}
+public void setAcc_address(String acc_address) {
+	this.acc_address = acc_address;
+}
+public String getAcc_zipcode() {
+	return acc_zipcode;
+}
+public void setAcc_zipcode(String acc_zipcode) {
+	this.acc_zipcode = acc_zipcode;
+}
+public String getAcc_qq() {
+	return acc_qq;
+}
+public void setAcc_qq(String acc_qq) {
+	this.acc_qq = acc_qq;
+}
+public String getAcc_recidcard() {
+	return acc_recidcard;
+}
+public void setAcc_recidcard(String acc_recidcard) {
+	this.acc_recidcard = acc_recidcard;
+}
+
+public Bill getBill() {
+	return bill;
+}
+
+public void setBill(Bill bill) {
+	this.bill = bill;
+}
+
+public Double getAcount_month_sumtime() {
+	return acount_month_sumtime;
+}
+
+public void setAcount_month_sumtime(Double acount_month_sumtime) {
+	this.acount_month_sumtime = acount_month_sumtime;
+}
+
+}

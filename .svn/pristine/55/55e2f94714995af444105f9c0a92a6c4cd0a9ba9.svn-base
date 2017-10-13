@@ -1,0 +1,116 @@
+﻿<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+       <%@ include file ="../include/link.jsp"%>
+      
+        <script language="javascript" type="text/javascript">
+        	
+        	//提交表单数据
+            $(function(){
+            	$("#addfee").click(function(){
+            		$.ajax({
+            			url:"${pageContext.request.contextPath}/fee/feeAdd.do",
+            			type:'post',
+            			data:$("#addfee_form").serialize(),
+            		    success:function(data){
+            				if(data>0)
+            					$("save_result_info").addclass("save_success").text("添加资费成功！").show().delay(3000).hide(0);	
+        					$("save_result_info").addclass("save_fail").text("添加资费失败！").show().delay(3000).hide(0);	
+            			} 
+            		})
+            	})
+            })
+          
+           //切换资费类型
+            $(function(){
+            	$("#monthly").click(function(){
+            		$("#ftime").hide();
+            		$("#funitcost").hide();
+            		$("#fcost").show();
+            	})
+            	
+            	$("#timeBased").click(function(){
+            		$("#ftime").hide();
+            		$("#fcost").hide();
+            		$("#funitcost").show();
+            	})
+            	
+            	$("#package").click(function(){
+            		$("#ftime").show();
+            		$("#fcost").show();
+            		$("#funitcost").show();
+            	})
+            	
+            })
+        </script>
+    </head>
+    <body>
+       <!-- 导航栏与当前用户 -->
+        	<%@include file="../include/header.jsp" %>
+        
+        <div id="main">            
+            <div id="save_result_info"></div>
+            <form action="${pageContext.request.contextPath}/fee/feeAdd.do"  class="main_form" id="addfee_form">
+                <div class="text_info clearfix"><span>资费名称：</span></div>
+                <div class="input_info">
+                    <input type="text" class="width300" value="" name="fee_name"/>
+                    <!-- <span class="required">*</span>
+                    <div class="validate_msg_short">50长度的字母、数字、汉字和下划线的组合</div> -->
+                </div>
+                <div class="text_info clearfix"><span>资费类型：</span></div>
+                <div class="input_info fee_type">
+                    <input type="radio" name="fee_type" id="monthly"  value="1"/>
+                    <label for="monthly">包月</label>
+                    <input type="radio" name="fee_type" id="package"  value="2" checked="checked"/>
+                    <label for="package">套餐</label>
+                    <input type="radio" name="fee_type" id="timeBased"  value="3"/>
+                    <label for="timeBased">计时</label>
+                </div>
+                <div id="ftime">
+	                <div class="text_info clearfix" ><span>基本时长：</span></div>
+	                <div class="input_info">
+	                    <input type="text" value="" class="width100" name="time" />
+	                    <span class="info">小时</span>
+	                    <span class="required">*</span>
+	                    <div class="validate_msg_long">1-600之间的整数</div>
+	                </div>
+                </div>
+                <div id="fcost">
+	                <div class="text_info clearfix"><span>基本费用：</span></div>
+	                <div class="input_info" >
+	                    <input type="text" value="" class="width100" name="basecost" />
+	                    <span class="info">元</span>
+	                    <!-- <span class="required">*</span>
+	                    <div class="validate_msg_long error_msg">0-99999.99之间的数值</div> -->
+	                </div>
+                </div>
+                <div id="funitcost">
+	                <div class="text_info clearfix" ><span>单位费用：</span></div>
+	                <div class="input_info">
+	                    <input type="text" value="" class="width100" name="unitcost"/>
+	                    <span class="info">元/小时</span>
+	                    <!-- <span class="required">*</span>
+	                    <div class="validate_msg_long error_msg">0-99999.99之间的数值</div> -->
+	                </div>
+                </div>
+                <div class="text_info clearfix"><span>资费说明：</span></div>
+                <div class="input_info_high">
+                    <textarea class="width300 height70" name="fee_comment"></textarea>
+                   <!--  <div class="validate_msg_short error_msg">100长度的字母、数字、汉字和下划线的组合</div> -->
+                </div>                    
+                <div class="button_info clearfix">
+                    <input type="button" value="保存" class="btn_save" id="addfee"/>
+                    <input type="button" value="取消" class="btn_save" onclick="location.href='${pageContext.request.contextPath}/view/fee/fee_add.jsp';"/>
+                </div>
+            </form>  
+        </div>
+        <!--主要区域结束-->
+        <div id="footer">
+          
+        </div>
+    </body>
+</html>

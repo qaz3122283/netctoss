@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.RoleDao">
+	<sql id="roleNum">r.role_id,r.role_name</sql>
+	
+	<resultMap type="Role" id="Role">
+		<id property="role_id" column="role_id" />
+		<collection property="power" select="group7netctoss.dao.PowerDao.powByRole" column="role_id">
+			<id property="pow_id" column="pow_id"/>
+			<result property="pow_name" column="pow_name"/>
+			<result property="pow_class" column="pow_class"/>
+			<result property="pow_url" column="pow_url"/>
+		</collection>
+	</resultMap>
+	
+	<select id="roleByAdmin" resultMap="Role">
+		select <include refid="roleNum" />
+		from role r,admin_role ar
+		where r.role_id=ar.role_id and ar.admin_id=#{admin_id}
+	</select>
+	
+	<select id="selAllRole" resultMap="Role">
+		select <include refid="roleNum" />
+		from role r
+	</select>
+	
+	<insert id="addRole" useGeneratedKeys="true" keyProperty="rol_id">
+		insert into role(role_name) values(#{role_name})
+	</insert>
+	
+	<insert id="addPerByRoleId">
+		insert into role_powers(role_id,power_id) values(#{role_id},#{power_id})
+	</insert>
+	
+	<delete id="delRoleById">
+		delete from role where role_id =#{role_id}
+	</delete>
+	
+	<delete id="delRolPerById">
+		delete from role_powers where role_id=#{role_id}
+	</delete>
+	
+	<update id="updRoleName">
+		update role set role_name = #{role_name} where role_id=#{role_id}
+	</update>
+	
+	<select id="selRoleById" resultMap="Role">
+		select <include refid="roleNum" />
+		from role r
+		where r.role_id=#{role_id}
+	</select>
+	
+	<!--通过管理员id查询管理员所拥有的角色集合 -->
+	<select id="selRolesById" resultType="Role">
+		SELECT ar.role_id,r.role_name 
+		FROM admin_role ar LEFT JOIN role r ON ar.role_id =r.role_id 
+		WHERE admin_id = #{admin_id}
+	</select>
+</mapper>

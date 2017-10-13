@@ -1,0 +1,16 @@
+package group7netctoss.dao;
+
+import java.util.List;
+
+import javax.management.relation.Role;
+
+import group7netctoss.entity.Power;
+
+
+public interface PowerDao {
+
+	/**
+	 * 根据角色查询权限
+	 */
+	public List<Power> powByRole(Role role);
+}

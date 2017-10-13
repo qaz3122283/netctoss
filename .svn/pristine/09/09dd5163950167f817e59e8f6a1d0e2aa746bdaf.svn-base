@@ -1,0 +1,71 @@
+package group7netctoss.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import group7netctoss.dao.RoleDao;
+import group7netctoss.entity.Power;
+import group7netctoss.entity.Role;
+import group7netctoss.service.RoleService;
+
+@Service("roleService")
+public class RoleServiceImpl implements RoleService {
+	
+	@Resource
+	private RoleDao roleDao;
+	@Override
+	public List<Role> getAllRole() {
+		// TODO Auto-generated method stub
+		return roleDao.selAllRole();
+	}
+	@Override
+	public int addRole(Role role) {
+		// TODO Auto-generated method stub
+		int i = 0;
+		i = roleDao.addRole(role);
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		if(i>0){
+			for(Power p : role.getPower()){
+				map.put("role_id",role.getRole_id());
+				map.put("power_id",p.getPow_id());
+				i = roleDao.addPerByRoleId(map);
+			}
+		}		
+		return i;
+	}
+	@Override
+	public int deleteRole(Role role) {
+		// TODO Auto-generated method stub
+		return roleDao.delRoleById(role);
+	}
+	@Override
+	public int updateRole(Role role) {
+		// TODO Auto-generated method stub
+		int i = 0;
+		i = roleDao.updRoleName(role);
+		System.out.println("zhejhsiahsdnqwoi"+role.getRole_id());
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		if(role.getPower()!=null){
+			int a =roleDao.delRolPerById(role);
+			if(a>=0){
+				for(Power p : role.getPower()){
+					map.put("role_id",role.getRole_id());
+					map.put("power_id",p.getPow_id());
+					i = roleDao.addPerByRoleId(map);
+				}
+			}
+		}
+		return i;
+	}
+	@Override
+	public Role getRoleById(Role role) {
+		// TODO Auto-generated method stub
+		return roleDao.selRoleById(role);
+	}
+
+}

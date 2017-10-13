@@ -1,0 +1,41 @@
+/**
+ * 
+ */
+package group7netctoss.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.entity.BillDetail;
+import group7netctoss.entity.BillItem;
+import group7netctoss.service.BillDeatilService;
+
+/**
+ * 详单信息的控制层
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/billDetail")
+public class BillDetailController {
+	
+	@Resource
+	private BillDeatilService billDeatilService;
+	
+	@RequestMapping("/billDetailList")
+	public String showBillDetail(String bill_id,BillItem item,Model model){
+		BillDetail detail = new BillDetail();
+		detail.setItem(item);
+		List<BillDetail> lde = billDeatilService.getBillDetail(detail);
+		if(!lde.isEmpty()) detail = lde.get(0);
+		model.addAttribute("lde", lde);
+		model.addAttribute("detail", detail);
+		model.addAttribute("bill_id", bill_id);
+		return "view/bill/bill_service_detail";
+	}
+}

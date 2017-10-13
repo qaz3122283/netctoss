@@ -1,0 +1,100 @@
+package group7netctoss.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+import group7netctoss.entity.Power;
+import group7netctoss.entity.Role;
+import group7netctoss.service.RoleService;
+
+@Controller
+@RequestMapping("/role")
+public class RoleController {
+
+	@Resource
+	private RoleService roleService;
+	
+	@RequestMapping("/roleList")
+	public String getAllRole(HttpServletRequest request){
+		List<Role> roles = roleService.getAllRole();
+		for(Role role:roles){
+			StringBuffer stringBuffer=new StringBuffer("");
+			for(Power power:role.getPower()){
+				stringBuffer = stringBuffer.append(power.getPow_name()+" , ");
+			}
+			role.setPowers(stringBuffer);
+		}
+		request.setAttribute("list",roles);
+		return "view/role/role_list";
+	}
+	
+	@RequestMapping("/roleAdd")
+	public String addRole(HttpServletRequest request){
+		String name = request.getParameter("per_name");
+		String role[] = request.getParameterValues("per");
+		boolean b = false;
+		if(role.length==0){
+			b = false;
+		}else{
+			b = true;
+		}
+		List<Power> p = new ArrayList<Power>();
+		for(int i =0;i<role.length;i++){
+			int a = Integer.parseInt(role[i]);
+			Power per = new Power();
+			per.setPow_id(a);
+			p.add(per);
+		}
+		Role r = new Role();
+		r.setRole_name(name);
+		r.setPower(p);
+		int i = roleService.addRole(r);
+		return "view/role/role_list";
+	}
+	
+	@RequestMapping("/roleDelete")
+	public String deleteRole(HttpServletRequest request){
+		int rol_id = Integer.parseInt(request.getParameter("rol_id"));
+		Role role = new Role();
+		role.setRole_id(rol_id);
+		int i = roleService.deleteRole(role);
+		return "view/role/role_list";
+	}
+
+	@RequestMapping("/roleUpdate")
+	public String updateRole(HttpServletRequest request){
+		int rol_id = Integer.parseInt(request.getParameter("id"));
+		String name = (String) request.getParameter("name");
+		String[] per = request.getParameterValues("per");
+		List<Power> lp = new ArrayList<Power>();
+		for(int i =0;i<per.length;i++){
+			int per_id = Integer.parseInt(per[i]);
+			Power p = new Power();
+			p.setPow_id(per_id);
+			lp.add(p);
+		}
+		Role role = new Role();
+		role.setRole_id(rol_id);
+		role.setRole_name(name);
+		role.setPower(lp);
+		int i = roleService.updateRole(role);
+		return "view/role/role_list";
+	}
+	
+	@RequestMapping("/roleUpdateShow")
+	public String updateShowRole(HttpServletRequest request){
+		int id = Integer.parseInt(request.getParameter("rol_id"));
+		Role r = new Role();
+		r.setRole_id(id);
+		Role role = roleService.getRoleById(r);
+		request.setAttribute("role",role);
+		return "view/role/role_modi";
+	}
+}

@@ -1,0 +1,37 @@
+/**
+ * 
+ */
+package group7netctoss.service;
+
+import java.util.List;
+
+import group7netctoss.entity.Account;
+
+
+
+/**
+ * @author xx
+ *
+ */
+public interface AccountService {
+	/*
+	 * 插入账务
+	 * */
+	public boolean insertAccount(Account account);
+	/*
+	 * 删除账务
+	 * */
+	public boolean deleteAccount(Account account);
+	/*
+	 * 修改账务
+	 * */
+	public boolean updateAccount(Account account);
+	/*
+	 * 查询账务
+	 * */
+	public Account selectAccount(Account account);
+	/*
+	 * 查询所有账务
+	 * */
+	public List<Account> selectAllAccount();
+}

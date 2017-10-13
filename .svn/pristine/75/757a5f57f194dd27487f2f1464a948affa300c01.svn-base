@@ -1,0 +1,381 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"  pageEncoding="utf-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+       	<%--  <%@include file="../include/link.jsp" %> --%> 
+        <link type="text/css" rel="stylesheet" media="all" href="${pageContext.request.contextPath}/css/global.css" />
+		<link type="text/css" rel="stylesheet" media="all" href="${pageContext.request.contextPath}/css/global_color.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="${pageContext.request.contextPath}/css/bootstrap/bootstrap.min.css" />  
+        <link type="text/css" rel="stylesheet" media="all" href="${pageContext.request.contextPath}/css/bootstrap/pagination.css" />
+      	<script src="${pageContext.request.contextPath}/js/bootstrap/jquery-2.1.1.js"></script>
+        <script src="${pageContext.request.contextPath}/js/bootstrap/jquery-2.1.1.min.js"></script> 
+		<script src="${pageContext.request.contextPath}/js/bootstrap/bootstrap.min.js"></script>
+		<script src="${pageContext.request.contextPath}/js/bootstrap/pagination.js"></script>
+		<style>
+			.context{
+				text-align:center;
+			}
+		</style>
+        <script language="javascript" type="text/javascript">
+	        $(function(){
+	   			
+	        	$("#menu a").each(function(){
+	        		if($(this).attr("class")==$("body").attr("name")){
+	        			$(this).attr("class","service_on");
+	        		}
+	        	});
+	        	
+	        	//初始化显示数据
+	        	show("","","","10");
+	        	
+	        	//搜索功能
+	        	$("#search").click(function(){
+	        		var ser_os = $("#os_account").val();
+	        		var ser_ip = $("#ip").val();
+	        		var acc_idcard= $("#identify").val();
+	        		var ser_state = $("#sel").val();
+	        		show(ser_os,ser_ip,acc_idcard,ser_state);
+	        	});
+	        	
+	        	//添加时跳转到添加界面动作
+	        	$("#add").click(function(){
+	        		location.href="${pageContext.request.contextPath}/service/showOpenFee.do";
+	        	});
+	        	
+	        	//初始化显示动作
+	        	function show(ser_os,ser_ip,acc_idcard,ser_state){
+	        		$.ajax({
+		       			url: '${pageContext.request.contextPath}/service/seareach.do',
+		       			type: 'post',
+		       			data:{
+		       				ser_os:ser_os,
+		       				ser_ip:ser_ip,
+		       				acc_idcard:acc_idcard,
+		       				ser_state:ser_state,
+		       			},
+		       			success:function(data){
+		       			 	var container = $("#pagination");
+		       				var options = {
+		    		                dataSource: data,
+		    		                locator: 'items',
+		    		                totalNumber: 20,
+		    		                className: 'paginationjs-theme-blue',
+		    		                pageSize: 3,
+		    		                pageRange: 2,
+		    		                showGoInput: true,
+		    		                showGoButton: true,
+		    		                
+		    		                ajax: {
+		    		                    beforeSend: function(){
+		    		                        dataContainer.html('Loading data from flickr.com ...');
+		    		                    }
+		    		                }, 
+		    		                callback: function (data, pagination) {
+		    		                	$('tr:gt(0)').remove();
+		    		                	$.each(data, function (index, item) {
+		    		                		$("#datalist").append("<tr id='"+item.ser_os+"'>"+
+				    	       							"<td><a href='${pageContext.request.contextPath}/service/showDetail.do?ser_id="+item.ser_id+"' title='查看明细' >"+item.ser_id+"</a></td>"+
+				    	       							"<td>"+item.account.acc_id+"</td>"+
+				    	       							"<td>"+item.account.acc_idcard+"</td>"+
+				    	       							"<td>"+item.account.acc_name+"</td>"+
+				    	       							"<td>"+item.ser_os+"</td>"+
+				    	       				"</tr>");
+		    	       						if(item.ser_state==1){
+		    	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>开通</td>")
+		    	       						}else if(item.ser_state==0){
+		    	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>暂停</td>");
+		    	       						}else{
+		    	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>删除</td>");
+		    	       						}
+		    	       						$("#"+item.ser_os).append("<td>"+item.ser_ip+"</td>"+
+		    	       							"<td>"+
+		    	                                	"<a class='summary'  onmouseover='showDetail(true,this);' onmouseout='showDetail(false,this);'> "+item.fee.fee_name+"</a>"+
+		    	                                	"<div  class='detail_info'>"+item.fee.fee_comment+"</div>"+
+		                            			"</td>");
+		    	       						if(item.ser_state!=2){
+		    	       							$("#"+item.ser_os).append("<td id='"+item.ser_id+"'>"+
+		    	       							"</td>");
+		    	       							if(item.ser_state==0){
+		    	       								$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='开通' class='btn_start' />");
+		    	       							}
+		    	       							if(item.ser_state==1){
+		    	       								$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='暂停' class='btn_pause' />");
+		    	       							}
+		    	       							$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='修改' class='btn_modify' />");
+		    	       							$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='删除' class='btn_delete' />");
+		    	       						}else{
+		    	       							$("#"+item.ser_os).append("<td ></td>");
+		    	       						}
+	    			                    	
+	    			             		});
+		    		                }
+		    		            };
+		       				container.pagination(options);
+		       				
+		       				
+		       				/* $('tr:gt(0)').remove();
+		       				$.each(data,function(idx,item){
+	       						$("#datalist").append("<tr id='"+item.ser_os+"'>"+
+	       							"<td><a href='${pageContext.request.contextPath}/service/showDetail.do?ser_id="+item.ser_id+"' title='查看明细' >"+item.ser_id+"</a></td>"+
+	       							"<td>"+item.account.acc_id+"</td>"+
+	       							"<td>"+item.account.acc_idcard+"</td>"+
+	       							"<td>"+item.account.acc_name+"</td>"+
+	       							"<td>"+item.ser_os+"</td>"+
+	       						"</tr>");
+	       						if(item.ser_state==1){
+	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>开通</td>")
+	       						}else if(item.ser_state==0){
+	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>暂停</td>");
+	       						}else{
+	       							$("#"+item.ser_os).append("<td class='"+item.ser_id+"'>删除</td>");
+	       						}
+	       						$("#"+item.ser_os).append("<td>"+item.ser_ip+"</td>"+
+	       							"<td>"+
+	                                	"<a class='summary'  onmouseover='showDetail(true,this);' onmouseout='showDetail(false,this);'> "+item.fee.fee_name+"</a>"+
+	                                	"<div  class='detail_info'>"+item.fee.fee_comment+"</div>"+
+                        			"</td>");
+	       						if(item.ser_state!=2){
+	       							$("#"+item.ser_os).append("<td id='"+item.ser_id+"'>"+
+	       							"</td>");
+	       							if(item.ser_state==0){
+	       								$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='开通' class='btn_start' />");
+	       							}
+	       							if(item.ser_state==1){
+	       								$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='暂停' class='btn_pause' />");
+	       							}
+	       							$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='修改' class='btn_modify' />");
+	       							$("#"+item.ser_id).append("<input name='"+item.ser_id+"' type='button' value='删除' class='btn_delete' />");
+	       						}else{
+	       							$("#"+item.ser_os).append("<td ></td>");
+	       						}
+		       				}); */
+		       				
+		       				/* if (currentPage == 1) {
+		       					var initPagination = function () {
+      					              // 创建分页
+      					              $("#Pagination").pagination(allCount, {
+      					                num_edge_entries: 1, //边缘页数
+      					                num_display_entries: 2, //主体页数
+      					                prev_text: "<<",
+      					                next_text: ">>",
+      					                callback: PageSelectCallback,
+      					                items_per_page: pageSize //每页显示1项
+      					              });
+      					        }();
+      					        currentPage = 100;
+      					    } */
+      						
+		       				//启用的动作
+		    	        	$(".btn_start").click(function(){
+		    	        		if(window.confirm("确定要开通此业务吗？")){
+		    	        			var ser_id=$(this).attr("name");
+		    	        			$.ajax({
+		    	        				url : '${pageContext.request.contextPath}/service/open.do',
+		    	        				type : 'post',
+		    	        				data : {
+		    	        					ser_id : ser_id
+		    	        				},
+		    	        				success : function(date){
+		    	        					if(date=="0"){
+		    	        						$("."+ser_id).text("开通");
+		    	        						$("#"+ser_id).find('input:first').remove();
+		    	        						$("#"+ser_id).prepend("<input name='"+ser_id+"' type='button' value='暂停' class='btn_pause' />");
+		    	        						$(".operate_success").text("启用成功");
+		    	        						$(".operate_success").fadeIn(100);
+		    	        						$(".operate_success").fadeOut(2500);
+		    	        					}
+		    	        					if(date=="1"){
+		    	        						$(".operate_fail").text("开通失败!此账务账号未开启");
+		    	        						$(".operate_fail").fadeIn(100);
+		    	        						$(".operate_fail").fadeOut(2500);
+		    	        					}
+		    	        				}
+		    	        			})
+		    	               }
+		    	        	});
+		    	        	//暂停的动作
+		    	        	$(".btn_pause").click(function(){
+		    	        		if(window.confirm("确定要暂停此业务吗？")){
+		    	        			var ser_id=$(this).attr("name");
+		    
+		    	        			$.ajax({
+		    	        				url : '${pageContext.request.contextPath}/service/pause.do',
+		    	        				type : 'post',
+		    	        				data : {
+		    	        					ser_id : ser_id
+		    	        				},
+		    	        				success : function(date){
+		    	        					if(date=="0"){
+		    	        						$("."+ser_id).text("暂停");
+		    	        						$("#"+ser_id).find('input:first').remove();
+		    	        						$("#"+ser_id).prepend("<input name='"+ser_id+"' type='button' value='开通' class='btn_start' />");
+		    	        						$(".operate_success").text("暂停成功");
+		    	        						$(".operate_success").fadeIn(100);
+		    	        						$(".operate_success").fadeOut(2500);
+		    	        					}
+		    	        					if(date=="1"){
+		    	        						$(".operate_fail").text("暂停失败");
+		    	        						$(".operate_fail").fadeIn(100);
+		    	        						$(".operate_fail").fadeOut(2500);
+		    	        					}
+		    	        				}
+		    	        			})
+		    	               }
+		    	        	});
+		    	        	
+		    	        	//修改的动作
+		    	        	$(".btn_modify").click(function(){
+		    					location.href="${pageContext.request.contextPath}/service/modiShow.do?ser_id="+$(this).attr("name");
+		    				});
+		    	        	
+		    	        	//删除的动作
+		    	        	$(".btn_delete").click(function(){
+		    	        		if(window.confirm("确定要删除此账务账号吗？\r\n删除后将不能恢复，且会删除其下属的所有业务账号。")){
+		    	        			var ser_id=$(this).attr("name");
+		    	        			//onclick="location.href='../../ServiceDeleteAction.do?bussid=${ls.bussid}';"
+		    	        			$.ajax({
+		    	        				url : '${pageContext.request.contextPath}/service/delete.do',
+		    	        				type : 'post',
+		    	        				data : {
+		    	        					ser_id : ser_id
+		    	        				},
+		    	        				success : function(date){
+		    	        					if(date=="0"){
+		    	        						$("."+ser_id).text("删除");
+		    	        						$("#"+ser_id).empty();
+		    	        						$(".operate_success").text("删除成功");
+		    	        						$(".operate_success").fadeIn(100);
+		    	        						$(".operate_success").fadeOut(2500);
+		    	        					}
+		    	        					if(date=="1"){
+		    	        						$(".operate_fail").text("删除失败");
+		    	        						$(".operate_fail").fadeIn(100);
+		    	        						$(".operate_fail").fadeOut(2500);
+		    	        					}
+		    	        				}
+		    	        			})
+		    	               }
+		    	        	});
+		    	        	
+		
+		       			}//成功方法结束
+	        		});
+	        	}
+	        	
+	        	
+	        	
+	        	
+	        });
+        
+            //显示角色详细信息
+            function showDetail(flag, a) {
+                var detailDiv = a.parentNode.getElementsByTagName("div")[0];
+                if (flag) {
+                    detailDiv.style.display = "block";
+                }
+                else
+                    detailDiv.style.display = "none";
+            }
+            //删除
+            function deleteAccount() {
+                var r = window.confirm("确定要删除此业务账号吗？删除后将不能恢复。");
+                document.getElementById("operate_result_info").style.display = "block";
+            }
+            //开通或暂停
+            function setState() {
+                var r = window.confirm("确定要开通此业务账号吗？");
+                document.getElementById("operate_result_info").style.display = "block";
+            }
+        </script>
+    </head>
+    <body name="service_off">
+       	<!--Logo区域开始-->
+        <!--导航区域开始-->
+        <%@include file="../include/header.jsp" %>
+        <!--主要区域开始-->
+        <!--导航区域结束-->
+        <div id="main">
+            <form action="" method="">
+                <!--查询-->
+                <div class="search_add">                        
+                    <div>OS 账号：<input id="os_account" type="text" value="" class="width100 text_search" /></div>                            
+                    <div>服务器 IP：<input id="ip" type="text" value="" class="width100 text_search" /></div>
+                    <div>身份证：<input id="identify" type="text"  value="" class="text_search" /></div>
+                    <div>状态：
+                        <select id="sel" class="select_search">
+                            <option value="10">全部</option>
+                            <option value="1">开通</option>
+                            <option value="0">暂停</option>
+                            <option value="2">删除</option>
+                        </select>
+                    </div>
+                    <div><input id="search" type="button" value="搜索" class="btn_search" /></div>
+                    <input id="add" type="button" value="增加" class="btn_add" />
+                </div>  
+                <!--删除的操作提示-->
+                <div id="operate_result_info" class="operate_success">
+                    <img src="../../images/close.png" onclick="this.parentNode.style.display='none';" />
+                    			删除成功！
+                </div>  
+                <div id="operate_result_info" class="operate_fail">
+                    <img src="../../images/close.png" onclick="this.parentNode.style.display='none';" />
+                    	删除失败！
+                </div> 
+                <!--数据区域：用表格展示数据-->     
+                <div id="data">            
+                    <table id="datalist">
+	                    <tr>
+	                        <th >业务ID</th>
+	                        <th >账务账号ID</th>
+	                        <th class="width150">身份证</th>
+	                        <th class="width70">姓名</th>
+	                        <th>OS 账号</th>
+	                        <th class="width50">状态</th>
+	                        <th class="width100">服务器 IP</th>
+	                        <th class="width100">资费</th>                                                        
+	                        <th class="width200"></th>
+	                    </tr>                                 
+               		</table>  
+               		           
+               <!--   <p>业务说明：<br />
+                1、创建即开通，记载创建时间；<br />
+                2、暂停后，记载暂停时间；<br />
+                3、重新开通后，删除暂停时间；<br />
+                4、删除后，记载删除时间，标示为删除，不能再开通、修改、删除；<br />
+                5、业务账号不设计修改密码功能，由用户自服务功能实现；<br />
+                6、暂停和删除状态的账务账号下属的业务账号不能被开通。</p>
+                -->
+                </div>                    
+                <!--分页-->
+                <!-- <div id="datacontainer">
+				</div>  -->
+				
+				 <div style="overflow: hidden;">
+               		<div  style="clear:both;margin-top:5px;margin:0 auto;width:50%;text-align:center" id="pagination" >
+					</div>   
+				 </div> 
+                
+               <%--  <div style="text-align: center; width: 940px;">
+	                <ul class="pagination" >
+	                	
+	                    <li><a href="#">首页</a></li>
+	        	        <li><a href="#">上一页</a></li>
+	        	        <c:forEach var="i" begin="1" end="5" >   
+                        	<li><a id="${i}">${i}</a></li>
+                        </c:forEach>
+	                
+	                    <li><a href="#">下一页</a></li>
+	                   	<li> <a href="#">末页</a></li>
+	                </ul>  
+                </div>    --%>                
+            </form>
+        </div>
+        <!--主要区域结束-->
+        <div id="footer">
+           
+        </div>
+    </body>
+</html>

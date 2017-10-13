@@ -1,0 +1,36 @@
+/**
+ * 
+ */
+package group7netctoss.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.entity.Bill;
+import group7netctoss.service.BillService;
+
+
+/**
+ * 账单模块的Servlet
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/bill")
+public class BillController {
+	
+	@Resource
+	private BillService billService;
+	
+	@RequestMapping("BillListAction")
+	public String selAllBills(Model model){
+		List<Bill> lb = billService.getAllBills();
+		model.addAttribute("lb", lb);
+		return "view/bill/bill_list";
+	}
+}

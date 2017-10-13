@@ -1,0 +1,23 @@
+/**
+ * 
+ */
+package group7netctoss.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import group7netctoss.entity.BillDetail;
+
+/**
+ * 详单表的数据控制层
+ * @author Administrator
+ *
+ */
+public interface BillDetailDao {
+	/**
+	 * 查询详单信息
+	 * @param detail
+	 * @return
+	 */
+	public List<BillDetail> selBillDetail(BillDetail detail);
+}

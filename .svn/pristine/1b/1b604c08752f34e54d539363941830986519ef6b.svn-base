@@ -1,0 +1,122 @@
+package group7netctoss.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.dao.RoleDao;
+import group7netctoss.entity.Admin;
+import group7netctoss.entity.Role;
+import group7netctoss.service.AdminService;
+import group7netctoss.service.RoleService;
+
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+		
+	@Resource
+	private AdminService adminService;
+	@Resource
+	private RoleService roleService;
+		
+	@RequestMapping("/adminList.do")
+	public String getAllAdmin(HttpServletRequest request){
+		List<Admin> la = adminService.getAllAdmin();
+		request.setAttribute("allAdmin_list",la);		
+		return "view/admin/admin_list";		
+	}
+	@RequestMapping("/adminModi.do")
+	public String changeAdmin(HttpServletRequest request){
+		Admin admin = new Admin();
+		admin.setAdmin_id(Integer.parseInt(request.getParameter("admin_id")));
+		Admin a = adminService.getAdminById(admin);
+		request.setAttribute("admin",a);
+		
+		List<Role> role= roleService.getAllRole();
+		request.setAttribute("role",role);
+		return "view/admin/admin_modi";
+	}
+	/**
+	 * 动态获取所有Role
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRole.do")
+	public String getRole(HttpServletRequest request){
+		List<Role> role= roleService.getAllRole();
+		request.setAttribute("role",role);
+		return "view/admin/admin_add";
+	}
+	@RequestMapping("/adminUpdate.do")
+	public String adminUpdate(HttpServletRequest request){
+		int id = Integer.parseInt(request.getParameter("id"));
+		String name = request.getParameter("name");
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		String[] rol = request.getParameterValues("per");
+		
+		List<Role> lr = new ArrayList<Role>();
+		for(int i =0;i<rol.length;i++){
+			int rol_id = Integer.parseInt(rol[i]);
+			Role role = new Role();
+			role.setRole_id(rol_id);
+			lr.add(role);
+		}
+		Admin admin = new Admin();
+		admin.setAdmin_id(id);
+		admin.setAdmin_name(name);
+		admin.setAdmin_tel(tel);
+		admin.setAdmin_email(email);
+		admin.setAdmin_role(lr);
+		int i = adminService.updateAdmin(admin);
+		return "view/admin/admin_list";
+	}
+	
+	@RequestMapping("/adminAdd.do")
+	public String addAdmin(HttpServletRequest request){
+		String name = request.getParameter("name");
+		String username = request.getParameter("username");
+		String psw = request.getParameter("psw");
+		String img = "touxiang";
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		
+		String[] rol = request.getParameterValues("rol");
+		List<Role> roles = new ArrayList<Role>();
+		for(int i=0;i<rol.length;i++){
+			int rol_id = Integer.parseInt(rol[i]);
+			Role r = new Role();
+			r.setRole_id(rol_id);
+			roles.add(r);
+		}
+		
+		Admin admin = new Admin();
+		admin.setAdmin_name(name);
+		admin.setAdmin_account(username);
+		admin.setAdmin_psw(psw);
+		admin.setAdmin_photo(img);
+		admin.setAdmin_tel(tel);
+		admin.setAdmin_email(email);
+		admin.setAdmin_role(roles);
+		
+		int i = adminService.insertAdmin(admin);
+		return "view/admin/admin_list";
+	}
+	
+	@RequestMapping("/adminDelete.do")
+	public String deleteAdmin(HttpServletRequest request){
+		int adm_id =  Integer.parseInt(request.getParameter("adm_id"));
+		Admin admin  = new Admin();
+		admin.setAdmin_id(adm_id);
+		int i = adminService.delAdmin(admin);
+		return "view/admin/admin_list";
+	}
+	
+}

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="group7netctoss.dao.BillDao">
+ 	<resultMap type="bill" id="billInfo">
+ 		<id property="bill_id" column="bill_id"/>
+ 		<result property="bill_payway" column="bill_payway"/>
+ 		<result property="bill_cost" column="bill_cost"/>
+ 		<result property="bill_month" column="bill_month"/>
+ 		<result property="bill_pstate" column="bill_pstate"/>
+ 		<association property="acc" javaType="account">
+ 			<id property="acc_id" column="acc_id"/>
+ 			<result property="acc_name" column="acc_name"/>
+ 			<result property="acc_idcard" column="acc_idcard"/>
+ 			<result property="acc_login" column="acc_login"/>
+ 		</association>
+ 	</resultMap>
+ 	<sql id="billf">b.bill_id,b.acc_id,b.bill_payway,b.bill_cost,b.bill_month,b.bill_pstate</sql>
+ 	<select id="selAllBills" resultMap="billInfo">
+ 		select <include refid="billf"></include>,a.acc_name,a.acc_idcard,a.acc_login from bill b join account a on(b.acc_id=a.acc_id)
+ 		 where year(b.bill_month) in(year(now()),YEAR(NOW())-1,YEAR(NOW())-2) order by b.bill_id limit #{pc.index},#{pc.pageSize}
+ 	</select>
+ 	<select id="selBillsByCondition" resultMap="billInfo">
+ 		select <include refid="billf"></include>,a.acc_name,a.acc_idcard,a.acc_login from bill b join account a on(b.acc_id=a.acc_id)
+ 		<where>
+ 			<if test='bill.acc.acc_idcard!=null and bill.acc.acc_idcard!=""'>
+ 				and acc_idcard=#{bill.acc.acc_idcard}
+ 			</if>
+ 			<if test='bill.acc.acc_login!=null and bill.acc.acc_login!=""'>
+ 				and acc_login=#{bill.acc.acc_login}
+ 			</if>
+ 			<if test='bill.acc.acc_name!=nuill and bill.acc.acc_name!=""'>
+ 				and acc_name=#{bill.acc.acc_name}
+ 			</if>
+ 			<if test='year!=null and year!=""'>
+ 				and year(bill_month)=#{year}
+ 			</if>
+ 			<if test='month!=null and month!=""'>
+ 				and month(bill_month)=#{month}
+ 			</if>
+ 		 and year(b.bill_month) in(year(now()),YEAR(NOW())-1,YEAR(NOW())-2) order by b.bill_id limit #{pc.index},#{pc.pageSize}
+ 		</where>
+ 		
+ 	</select>
+ 	<select id="selBillsCount" resultType="bill">
+ 		select b.bill_id from bill b join account a on(b.acc_id=a.acc_id)
+ 		<where>
+ 			<if test='bill.acc.acc_idcard!=null and bill.acc.acc_idcard!=""'>
+ 				and acc_idcard=#{bill.acc.acc_idcard}
+ 			</if>
+ 			<if test='bill.acc.acc_login!=null and bill.acc.acc_login!=""'>
+ 				and acc_login=#{bill.acc.acc_login}
+ 			</if>
+ 			<if test='bill.acc.acc_name!=nuill and bill.acc.acc_name!=""'>
+ 				and acc_name=#{bill.acc.acc_name}
+ 			</if>
+ 			<if test='year!=null and year!=""'>
+ 				and year(bill_month)=#{year}
+ 			</if>
+ 			<if test='month!=null and month!=""'>
+ 				and month(bill_month)=#{month}
+ 			</if>
+ 		 and year(b.bill_month) in(year(now()),YEAR(NOW())-1,YEAR(NOW())-2)
+ 		</where>
+ 	</select>
+ </mapper>

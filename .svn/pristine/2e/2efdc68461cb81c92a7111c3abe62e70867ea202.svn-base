@@ -1,0 +1,142 @@
+package group7netctoss.controller;
+
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.entity.Fee;
+import group7netctoss.service.FeeService;
+
+
+
+@Controller
+@RequestMapping("/fee")
+public class FeeController {
+	
+	@Resource
+	private FeeService feeService;
+	/**
+	 * 查询所有记录数  分页
+	 * @param pageSize
+	 * @return
+	 *//*
+	@RequestMapping("/feePage.do")
+	public @ResponseBody Integer feePage(Integer pageSize){
+		Integer feecount = feeService.getAllCounts();
+		return feecount;
+	}
+	*//**
+	 * 显示资费列表
+	 * @param request
+	 * @return
+	 *//*
+	@RequestMapping("/feeList.do")
+	@ResponseBody
+	public List<Fee> feeList(@RequestParam(value="pageSize",required=false) Integer pageSize, 
+			@RequestParam(value="currentPage",required=false, defaultValue="1") Integer currentPage){
+		
+		Map<String, Object> page = new HashMap<String, Object>();
+		page.put("startRecord", (currentPage-1)*pageSize);
+		page.put("pageSize", pageSize);
+		List<Fee> lf = feeService.getAllFee(page);
+		return lf;
+	}*/
+	/**
+	 * 显示所有资费列表
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/feeList.do")
+	public String feeList(HttpServletRequest request){
+		System.out.println("进来没");
+		List<Fee> lf = feeService.getAllFee();
+		request.setAttribute("lf", lf);
+		return "/view/fee/fee_list";
+	}
+
+	/**
+	 * 增加资费
+	 * @param fee
+	 * @param out
+	 */
+	@RequestMapping("/feeAdd")
+	public void addFee(Fee fee,PrintWriter out){
+		if("".equals(fee.getFee_time()))
+			fee.setFee_time(0);
+		if("".equals(fee.getFee_basecost()))
+			fee.setFee_basecost(0.00);
+		if("".equals(fee.getFee_unitcost()))
+			fee.setFee_unitcost(0.00);
+		int i = feeService.addFee(fee);
+		System.out.println(i);
+		out.println(i);
+	}
+	/**
+	 * 显示修改资费的信息
+	 * @param fee
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/feeMessage")
+	public String feeMessage(Fee fee,Model model){
+		Fee fee1 = feeService.selectFeeByID(fee);
+		model.addAttribute("fee", fee1);
+		return "view/fee/fee_modi";
+	}
+	/**
+	 * 修改资费
+	 * @param fee
+	 * @param out
+	 * @return
+	 */
+	@RequestMapping("/feeModi")
+	public String modiFee(Fee fee,PrintWriter out){		
+		feeService.update(fee);
+		return "redirect:/fee/feeList.do";		
+	}
+	
+	/**
+	 * 删除资费
+	 * @param fee
+	 * @param out
+	 */
+	@RequestMapping("/feeDel")
+	public String delFee(Fee fee,PrintWriter out){		
+		int i = feeService.delFee(fee);
+		//out.println(i);
+		return "redirect:/fee/feeList.do";
+	}
+	
+	/**
+	 * 启用资费
+	 * @param fee
+	 * @param out
+	 */
+	@RequestMapping("/feeStart")
+	public String startFee(Fee fee,PrintWriter out){		
+		int i = feeService.updateFeeState(fee);
+		out.println(i);
+		return "redirect:/fee/feeList.do";
+	}
+	
+	/**
+	 * 显示资费详情
+	 * @param fee
+	 * @return
+	 */
+	@RequestMapping("/feeDetail")
+	public String feeDatial(Fee fee,Model model){
+		Fee fee1 = feeService.selectFeeByID(fee);
+		model.addAttribute("fee", fee1);
+		return "/view/fee/fee_detail";
+	}
+	
+	
+	
+}

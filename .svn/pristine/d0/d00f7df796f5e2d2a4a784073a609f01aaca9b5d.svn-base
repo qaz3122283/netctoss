@@ -1,0 +1,13 @@
+/**
+ * 
+ */
+package group7netctoss.service;
+
+/**
+ * @author Pro451
+ *
+ */
+public interface ReportService {
+	
+
+}

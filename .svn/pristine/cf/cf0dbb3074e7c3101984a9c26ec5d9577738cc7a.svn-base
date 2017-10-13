@@ -1,0 +1,170 @@
+package group7netctoss.entity;
+
+import java.sql.Date;
+import java.sql.Timestamp;
+
+public class Service {
+	private int ser_id;  //业务账号id
+	private int acc_id;  //账务账号id
+	private Account account;
+	private int fee_id;  //资费id
+	private Fee fee;
+	private String ser_os;  //OS账号
+	private int ser_state; //业务状态
+	private String ser_psw; //业务账号密码
+	private String ser_ip; //服务器ip
+	private Timestamp ser_createtime;  //创建时间
+	private Timestamp ser_recordtime;  //业务账号暂停删除时间
+	private String s1;//备用字段1
+	private String s2;//备用字段2
+	private Date s3;//备用字段3
+	
+	
+	public Service() {
+		super();
+	}
+
+
+	public Account getAccount() {
+		return account;
+	}
+
+
+	public void setAccount(Account account) {
+		this.account = account;
+	}
+
+
+	public Fee getFee() {
+		return fee;
+	}
+
+
+	public void setFee(Fee fee) {
+		this.fee = fee;
+	}
+
+
+	public int getSer_id() {
+		return ser_id;
+	}
+
+
+	public void setSer_id(int ser_id) {
+		this.ser_id = ser_id;
+	}
+
+
+	public int getAcc_id() {
+		return acc_id;
+	}
+
+
+	public void setAcc_id(int acc_id) {
+		this.acc_id = acc_id;
+	}
+
+
+	public int getFee_id() {
+		return fee_id;
+	}
+
+
+	public void setFee_id(int fee_id) {
+		this.fee_id = fee_id;
+	}
+
+
+	public String getSer_os() {
+		return ser_os;
+	}
+
+
+	public void setSer_os(String ser_os) {
+		this.ser_os = ser_os;
+	}
+
+
+	public int getSer_state() {
+		return ser_state;
+	}
+
+
+	public void setSer_state(int ser_state) {
+		this.ser_state = ser_state;
+	}
+
+
+	public String getSer_psw() {
+		return ser_psw;
+	}
+
+
+	public void setSer_psw(String ser_psw) {
+		this.ser_psw = ser_psw;
+	}
+
+
+	public String getSer_ip() {
+		return ser_ip;
+	}
+
+
+	public void setSer_ip(String ser_ip) {
+		this.ser_ip = ser_ip;
+	}
+
+
+	public Timestamp getSer_createtime() {
+		return ser_createtime;
+	}
+
+
+	public void setSer_createtime(Timestamp ser_createtime) {
+		this.ser_createtime = ser_createtime;
+	}
+
+
+	public Timestamp getSer_recordtime() {
+		return ser_recordtime;
+	}
+
+
+	public void setSer_recordtime(Timestamp ser_recordtime) {
+		this.ser_recordtime = ser_recordtime;
+	}
+
+
+	public String getS1() {
+		return s1;
+	}
+
+
+	public void setS1(String s1) {
+		this.s1 = s1;
+	}
+
+
+	public String getS2() {
+		return s2;
+	}
+
+
+	public void setS2(String s2) {
+		this.s2 = s2;
+	}
+
+
+	public Date getS3() {
+		return s3;
+	}
+
+
+	public void setS3(Date s3) {
+		this.s3 = s3;
+	}
+	
+	
+	
+	
+}

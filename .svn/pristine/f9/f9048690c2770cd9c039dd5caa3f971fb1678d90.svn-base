@@ -1,0 +1,63 @@
+package group7netctoss.service;
+
+import java.util.List;
+import java.util.Map;
+
+import group7netctoss.entity.Admin;
+
+;
+
+public interface AdminService {
+	/**
+	 * 查询所有Admin
+	 * @return
+	 */
+	public List<Admin> getAllAdmin();
+	/**
+	 * 根据id查Admin
+	 */
+	public Admin getAdminById(Admin admin);
+	/**
+	 * 删除管理员
+	 */
+	public int delAdmin(Admin admin);
+	/**
+	 * 修改管理员信息
+	 */
+	public int updateAdmin(Admin admin);
+	/**
+	 * 添加管理员
+	 */
+	public int insertAdmin(Admin admin);
+	/**
+	 * 条件查询Admin
+	 * @param pow_id
+	 * @param role_name
+	 * @return
+	 */
+	public List<Admin> getAdminBy(int pow_id,String role_name);
+	/**
+	 * 管理员登录
+	 */
+	public Admin login(Admin admin);
+	/**
+	 * 修改管理员信息（姓名，电话，邮箱）
+	 */
+	public int modifyAdminInfo(Admin admin);
+	/**
+	 * 修改管理员登录密码
+	 */
+	public int modifyAdminPsw(Admin admin);
+	/**
+	 * 批量修改Admin密码
+	 */
+	public int updateAdminPsw(List<Admin> admins);
+	/**
+	 * 查询Admin数量
+	 */
+	public int selAdminCount();
+	/**
+	 * 查询Admin分页
+	 */
+	public List<Admin> selAdminByLimit(Map map);
+}

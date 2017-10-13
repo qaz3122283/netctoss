@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.FeeDao">
+	
+	<sql id="addFee">
+		fee_name,fee_type,fee_time,fee_basecost,fee_unitcost,fee_comment
+	</sql>	
+	<!-- 查询总记录数 -->
+	<select id="selectAllCounts" resultType="Integer">
+		select count(fee_id) from fee
+	</select>
+	
+	<!-- 增加资费 -->	
+	<insert id="insertFee">
+		insert into fee(<include refid="addFee"></include>) values(#{fee_name},#{fee_type},#{fee_time},#{fee_basecost},#{fee_unitcost},#{fee_comment})				
+	</insert>
+	
+	<!-- 删除资费 -->
+	<delete id="deleteFee">
+		delete from fee where fee_id=#{fee_id}
+	</delete>
+	
+	<!-- 修改资费 -->
+	<update id="updateFee">
+		update fee set fee_name=#{fee_name},fee_type=#{fee_type},fee_time=#{fee_time},fee_basecost=#{fee_basecost},fee_unitcost=#{fee_unitcost},fee_comment=#{fee_comment} 
+				where fee_state=0 and fee_id=#{fee_id}
+	</update>
+	
+	<!-- 启用资费 -->
+	<update id="updateFeeState">
+		update fee set fee_date=now(),fee_state=1 where fee_state=0 and fee_id=#{fee_id}
+	</update>
+	
+	<!-- 根据ＩＤ查询资费信息 -->
+	<select id="selectFeeByID" resultType="Fee">
+		select <include refid="allFee"></include> 
+		from fee where fee_id=#{fee_id}
+	</select>
+	
+	<!-- 查询所有资费信息 -->
+	<select id="selectAllFee" resultType="Fee">
+		select <include refid="allFee"></include> from fee
+	</select>
+	
+	<!-- 查询所有资费id、名称 -->
+	<select id="selectAllFeeIDName" resultType="Fee">
+		select fee_id,fee_name from fee where fee_state=1
+	</select>
+	
+	<sql id="allFee">
+		fee_id,fee_name,fee_time,fee_basecost,fee_unitcost,fee_startdate,fee_date,fee_type,fee_comment,fee_state
+	</sql>
+	
+</mapper>
+

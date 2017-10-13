@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.AccountDao"> <!-- 映射的文件 -->
+
+<sql id="columns">acc_id,acc_name,acc_idcard,acc_login,acc_state,acc_job,acc_sex,acc_qq,acc_recidcard,
+acc_createtime,acc_recordtime,acc_logintime,acc_psw,acc_tel,acc_ip,acc_email,acc_address,acc_zipcode</sql>
+
+	<select id="selectAllAccount" resultType="Account">
+		select <include refid="columns"></include> from account
+	</select>
+
+	<select id="selectAccount" resultType="Account">
+		select <include refid="columns"></include> from account where acc_idcard=#{acc_idcard}
+	</select>
+	
+	<!-- 根据业务id查账务 -->
+	<select id="selectAccountBySid" resultType="Account">
+		select <include refid="columns"></include> from account where acc_id
+		=(select acc_id from service where ser_id=#{ser_id})
+	</select>
+	
+	<!-- 根据账单id查账务 -->
+	<select id="selectAccountByBid" resultType="Account">
+		select <include refid="columns"></include> from account where acc_id
+		=(select acc_id from bill where bill_id=#{bill_id})
+	</select>
+	
+	<!-- 通过账务id查询账务信息    @author cbw -->
+	<select id="selectAccountById" resultType="Account">
+		select * from account where acc_id = #{acc_id}
+	</select>
+	
+	<!-- 通过账务账号查询账务信息    @author cbw -->
+	<select id="selectAccountByAcc" resultType="Account">
+		select * from account where acc_idcard = #{acc_idcard}
+	</select>
+	
+ 	<insert id="insertAccount">
+ 		INSERT INTO account(acc_name,acc_idcard,acc_login,acc_psw,acc_tel,acc_recidcard,acc_email,acc_job,acc_sex,acc_address,acc_zipcode,acc_qq) 
+ 		VALUE(#{acc_name},#{acc_idcard},#{acc_login},#{acc_psw},#{acc_tel},#{acc_recidcard},#{acc_email},#{acc_job},#{acc_sex},#{acc_address},#{acc_zipcode},#{acc_qq})
+ 	</insert>
+ 	
+ 	<delete id="deleteAccount">
+ 		delete from account where acc_id=#{acc_id}
+ 	</delete>
+ 	
+ 	<update id="updateAccount">
+ 		UPDATE  account SET acc_name=#{acc_name},acc_idcard=#{acc_idcard},
+		acc_tel=#{acc_tel},acc_recidcard=#{acc_recidcard},acc_email=#{acc_email},acc_job=#{acc_job},acc_sex=#{acc_sex},acc_address=#{acc_address},acc_zipcode=#{acc_zipcode},acc_qq=#{acc_qq} WHERE acc_id=#{acc_id}
+ 	</update>
+ 	
+ 	
+ 	
+</mapper>

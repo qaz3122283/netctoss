@@ -1,0 +1,50 @@
+/**
+ * 
+ */
+package group7netctoss.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.entity.BillDetail;
+import group7netctoss.entity.BillItem;
+import group7netctoss.entity.PageCount;
+import group7netctoss.service.BillDeatilService;
+
+/**
+ * 详单信息的控制层
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/billDetail")
+public class BillDetailController {
+	
+	@Resource
+	private BillDeatilService billDeatilService;
+	
+	@RequestMapping("/BillDetailListController")
+	public String showBillDetail(String bill_id,BillItem item,Model model,PageCount pc){
+		BillDetail detail = new BillDetail();
+		System.out.println(item.getItem_id());
+		detail.setItem(item);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("detail", detail);
+		pc.setTotleNumber(billDeatilService.getBillDetail(map).size());
+		map.put("pc", pc);
+		List<BillDetail> lde = billDeatilService.getBillDetail(map);
+		if(!lde.isEmpty()) detail = lde.get(0);
+		model.addAttribute("pc", pc);
+		model.addAttribute("lde", lde);
+		model.addAttribute("detail", detail);
+		model.addAttribute("bill_id", bill_id);
+		return "view/bill/bill_service_detail";
+	}
+}

@@ -1,0 +1,4 @@
+jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://106.14.120.20:3306/netctoss
+jdbc.username=xr
+jdbc.password=123456

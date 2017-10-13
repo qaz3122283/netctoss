@@ -1,0 +1,41 @@
+/**
+ * 
+ */
+package group7netctoss.dao;
+
+import java.util.List;
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Bill;
+import group7netctoss.entity.Service;
+
+
+ 
+/**
+ * @author xx
+ *
+ */
+public interface AccountDao{
+	/*
+	 * ��������
+	 * */
+	public int insertAccount(Account account);
+	/*
+	 * ɾ������
+	 * */
+	public int deleteAccount(Account account);
+	/*
+	 * �޸�����
+	 * */
+	public int updateAccount(Account account);
+	/*
+	 * ��ѯ����
+	 * */
+	public Account selectAccount(Account account);
+	/*
+	 * ��ѯ��������
+	 * */
+	public List<Account> selectAllAccount();
+	public Account selectAccountBySid(Service service);//�����˵�ģ����õ�
+	public Account selectAccountByBid(Bill bill);
+}

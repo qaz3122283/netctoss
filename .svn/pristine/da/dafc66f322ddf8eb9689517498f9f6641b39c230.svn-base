@@ -1,0 +1,176 @@
+package group7netctoss.controller;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Fee;
+import group7netctoss.entity.Service;
+import group7netctoss.service.AccountService;
+import group7netctoss.service.FeeService;
+import group7netctoss.service.ServiceService;
+
+
+@Controller
+@RequestMapping("/service")
+public class ServiceController {
+
+	@Resource
+	private ServiceService serviceService;
+	@Resource
+	private AccountService accountService;
+	@Resource
+	private FeeService feeService;
+	
+	//搜索和显示的功能
+	@RequestMapping("/seareach.do")
+	public @ResponseBody List<Service> seareach(String ser_os,String ser_ip,String acc_idcard,String ser_state){
+		Map<String,Object> map = new HashMap<String,Object>();
+		
+		map.put("ser_os", ser_os);
+		map.put("ser_ip", ser_ip);
+		map.put("acc_idcard", acc_idcard);
+		map.put("ser_state", ser_state);
+		
+	  	
+		if("".equals(acc_idcard))
+			return serviceService.selectServiceByCondi(map);
+		else{
+			Account account = new Account();
+			account.setAcc_idcard(acc_idcard);
+			map.put("account", account);
+			return serviceService.selectServiceByIdCard(map);
+		}
+	}
+	
+	//显示详细信息
+	@RequestMapping("/showDetail.do")
+	public String showDetail(Service service,HttpServletRequest request){
+		Service service1 = serviceService.selectServiceById(service);
+		request.setAttribute("service1", service1);
+		return "forward:../view/service/service_detail.jsp";
+	}
+	
+	//删除业务信息
+	@RequestMapping("/delete.do")
+	public void delete(Service service,PrintWriter out){
+		service.setSer_state(2);
+		if(serviceService.deleteService(service)){
+			out.print("0");
+		}else{
+			out.println("1");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	//开通业务
+	@RequestMapping("/open.do")
+	public void open(Service service,PrintWriter out){
+		if(serviceService.openService(service)){
+			out.print("0");
+		}else{
+			out.print("1");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	//暂停业务
+	@RequestMapping("/pause.do")
+	public void pause(Service service,PrintWriter out){
+		service.setSer_state(0);
+		if(serviceService.deleteService(service)){
+			out.print("0");
+		}else{
+			out.print("1");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	//显示修改信息
+	@RequestMapping("/modiShow.do")
+	public String modiShow(Service service,HttpServletRequest request){
+		Service service1 = serviceService.selectServiceById(service);
+		request.setAttribute("service1", service1);
+		request.setAttribute("openFeeLs", feeService.selectAllFeeIDName());
+		return "forward:../view/service/service_modi.jsp";
+	}
+		
+	//修改业务信息
+	@RequestMapping("/modify.do")
+	public void modify(Service service,PrintWriter out){
+		if(serviceService.updateService(service)){
+			out.print("0");
+		}else{
+			out.print("1");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	//显示开通资费信息
+	@RequestMapping("/showOpenFee.do")
+	public String showOpenFee(HttpServletRequest request){
+		request.setAttribute("openFeeLs", feeService.selectAllFeeIDName());
+		return "forward:../view/service/service_add.jsp";
+	}
+	
+	
+	
+	//添加业务信息
+	@RequestMapping("/add.do")
+	public void addFee(Service service,String ser_psw,String rbusspsw,PrintWriter out){
+		if(ser_psw.equals(rbusspsw))
+			if(serviceService.insertService(service)){
+				out.print("0");
+			}else{
+				out.print("1");
+			}
+		else{
+			out.print("2");
+		}
+		out.flush();
+		out.close();
+	}
+	
+	
+	//通过carid查询账务账号
+	@RequestMapping("selectAcc.do")
+	public @ResponseBody Account selectAcc(Account account){
+		return accountService.selectAccountByAcc(account);
+	}
+	
+	//通过账务账号查询是否有此账号
+	@RequestMapping("selectIsAcc.do")
+	public void selectIsAcc(Account account,PrintWriter out){
+		if(accountService.selectAccountByAcc(account)!=null){
+			out.print(1);
+		}
+		out.print(0);
+		out.flush();
+		out.close();
+	}
+	
+	@RequestMapping("selectAllCount.do")
+	public void selectAllCount(PrintWriter out,int pageSize){
+		int totalRed= serviceService.selectServiceAllCount();//总记录数
+	  	int totalPage = (totalRed%pageSize==0)?(totalRed/pageSize):(totalRed/pageSize+1);
+	  	out.print(totalPage);
+	  	out.flush();
+		out.close();
+	}
+}

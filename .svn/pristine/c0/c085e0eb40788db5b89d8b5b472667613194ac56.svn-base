@@ -1,0 +1,60 @@
+package group7netctoss.service.impl;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import group7netctoss.dao.ReportDao;
+import group7netctoss.entity.Report;
+import group7netctoss.service.ReportService;
+
+
+
+@org.springframework.stereotype.Service("reportService")
+public class ReportServiceImpl implements ReportService {
+	
+	@Resource
+	private ReportDao reportDao;
+	
+	@Override
+	public List<Report> getAccountMonthtime() {
+		// TODO Auto-generated method stub
+		List<Report> lr = new ArrayList<Report>();
+		lr = reportDao.selectAccountMonthtime();
+		for(int i=0;i<lr.size();i++){
+			//String year = String.valueOf(result.get(i).getBill().getBill_month().getYear());
+			//将Bill_month中的年和月取出转为字符串
+			String month = String.valueOf(lr.get(i).getBill().getBill_month().getYear())+"年"+
+					String.valueOf(lr.get(i).getBill().getBill_month().getMonth())+"月";
+			lr.get(i).setBmonth(month);
+			//将Double类型的数据转为时长
+			String accountSumTimeString = String.valueOf(lr.get(i).getAcount_month_sumtime()/3600)+"小时"+
+					String.valueOf((lr.get(i).getAcount_month_sumtime()%3600)/60)+"分";
+			lr.get(i).setAccountSumTimeString(accountSumTimeString);
+		}
+		return lr;
+	}
+
+	@Override
+	public List<Report> getSeripUseTimeRank() {
+		// TODO Auto-generated method stub
+		List<Report> lr = new ArrayList<Report>();
+		lr = reportDao.selectSeripUseTimeRank();
+		for(int i=0;i<lr.size();i++){
+			String seripSumTimeString = String.valueOf(lr.get(i).getSer_ip_sumtime()/3600)+"小时"+
+					String.valueOf((lr.get(i).getSer_ip_sumtime()%3600)/60)+"分";
+			lr.get(i).setSeripSumTimeString(seripSumTimeString);	
+		}
+		return lr;
+	}
+
+	@Override
+	public List<Report> getSeripFtypeCount() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

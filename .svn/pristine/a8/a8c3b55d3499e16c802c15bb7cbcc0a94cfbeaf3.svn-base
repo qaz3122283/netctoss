@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.AdminDao">
+	<sql id = "adminNum">a.admin_id,a.admin_name,a.admin_account,a.admin_tel,a.admin_photo,a.admin_email,a.admin_psw,a.admin_date</sql>
+	<sql id = "adminAddNum">a.admin_name,a.admin_account,a.admin_tel,a.admin_photo,a.admin_email,a.admin_psw,a.admin_date</sql>
+	
+	<resultMap type="Admin" id="Admin">
+		<id property="admin_id" column="admin_id" />
+		<collection property="admin_role" select="group7netctoss.dao.RoleDao.roleByAdmin" column="admin_id">
+			<id property="role_id" column="role_id"/>
+			<result property="role_name" column="role_name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selAllAdmin" resultMap="Admin">
+		select <include refid="adminNum" />
+		from admin a
+	</select>
+	
+	<select id="selAdminByid" resultMap="Admin">
+		select <include refid="adminNum" />
+		from admin a
+		where a.admin_id=#{admin_id}
+	</select>
+	
+	<delete id="delAdmin">
+		delete from admin where admin_id=#{admin_id}
+	</delete>
+	
+	<delete id="delRoleByAdmin">
+		delete from admin_role where admin_id=#{admin_id}
+	</delete>
+	
+	<update id="updAdmin">
+		update admin set admin_name = #{admin_name},admin_tel=#{admin_tel},admin_email=#{admin_email} where admin_id=#{admin_id}
+	</update>
+	<insert id="addRoleByAdmin">
+		insert into admin_role(admin_id,role_id) values(#{admin_id},#{role_id})
+	</insert>
+	
+	<insert id="addAdmin" useGeneratedKeys="true" keyProperty="adm_id">
+		insert into admin(<include refid="adminAddNum"></include>)
+		values (#{admin_name},#{admin_account},#{admin_psw},#{admin_photo},#{admin_tel},#{admin_email},now())
+	</insert>
+
+	<select id="selAdminBy" resultMap="Admin" >
+		select distinct <include refid="adminNum" />
+		from admin a,admin_role ar,role r,role_powers pr 
+		<where>
+			<if test="role_name!=null and role_name!=''"> 			
+				and ar.role_id=(select role_id from role where role_name=#{role_name}) and a.admin_id = ar.admin_id
+			</if>
+			<if test="pow_id!=0">
+				and a.admin_id=ar.admin_id and pr.role_id=ar.role_id and pr.pow_id=#{pow_id}
+			</if>
+		</where>
+	</select>
+	
+	<!--管理员登录通过账户密码登录（返回id，姓名，账号，电话，邮箱，创建时间）-->
+ 	<select id="login" resultType="Admin">
+ 		SELECT <include refid="adminNum" />
+ 		FROM admin a 
+ 		WHERE admin_account = #{admin_account} AND admin_psw = #{admin_psw}    
+ 	</select>
+ 	
+ 	<!--通过id修改管理员个人信息（姓名，电话，邮箱）） -->
+ 	<update id="updateAdminInfo">
+		UPDATE admin SET 
+		admin_name = #{admin_name},
+		admin_tel = #{admin_tel},
+		admin_email = #{admin_email} 
+		WHERE admin_id = #{admin_id}
+	</update>
+	
+	<!--修改管理员密码 -->
+ 	<update id="updateAdminPsw">
+ 		UPDATE admin 
+ 		SET admin_psw = #{admin_psw} 
+ 		where admin_id = #{admin_id}
+ 	</update>
+</mapper>

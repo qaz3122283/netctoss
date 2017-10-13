@@ -1,0 +1,240 @@
+package group7netctoss.controller;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.catalina.startup.PasswdUserDatabase;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import group7netctoss.dao.RoleDao;
+import group7netctoss.entity.Admin;
+import group7netctoss.entity.Role;
+import group7netctoss.service.AdminService;
+import group7netctoss.service.RoleService;
+
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+		
+	@Resource
+	private AdminService adminService;
+	@Resource
+	private RoleService roleService;
+		
+	@RequestMapping("/adminList.do")
+	public String getAllAdmin(HttpServletRequest request){
+		List<Admin> la = adminService.getAllAdmin();
+		request.setAttribute("allAdmin_list",la);		
+		return "view/admin/admin_list";		
+	}
+	@RequestMapping("/adminModi.do")
+	public String changeAdmin(HttpServletRequest request){
+		Admin admin = new Admin();
+		admin.setAdmin_id(Integer.parseInt(request.getParameter("admin_id")));
+		Admin a = adminService.getAdminById(admin);
+		request.setAttribute("adminShow",a);
+		
+		List<Role> role= roleService.getAllRole();
+		request.setAttribute("role",role);
+		return "view/admin/admin_modi";
+	}
+	/**
+	 * 动态获取所有Role
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getRole.do")
+	public String getRole(HttpServletRequest request){
+		List<Role> role= roleService.getAllRole();
+		request.setAttribute("role",role);
+		return "view/admin/admin_add";
+	}
+	@RequestMapping("/adminUpdate.do")
+	public void adminUpdate(HttpServletRequest request,PrintWriter out){
+		int id = Integer.parseInt(request.getParameter("id"));
+		String name = request.getParameter("name");
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		String[] rol = request.getParameterValues("rol");
+		
+		List<Role> lr = new ArrayList<Role>();
+		for(int i =0;i<rol.length;i++){
+			int rol_id = Integer.parseInt(rol[i]);
+			Role role = new Role();
+			role.setRole_id(rol_id);
+			lr.add(role);
+		}
+		Admin admin = new Admin();
+		admin.setAdmin_id(id);
+		admin.setAdmin_name(name);
+		admin.setAdmin_tel(tel);
+		admin.setAdmin_email(email);
+		admin.setAdmin_role(lr);
+		int i = adminService.updateAdmin(admin);
+		if(i>0){
+			out.print("1");
+		}else{
+			out.print("0");
+		}
+	}
+	/**
+	 * 添加Admin
+	 * @param file
+	 * @param request
+	 * @param out
+	 */
+	@RequestMapping("/adminAdd.do")
+	public void addAdmin(HttpServletRequest request,PrintWriter out){
+		String name = request.getParameter("name");
+		String username = request.getParameter("username");
+		String psw = request.getParameter("psw");
+		
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		/*//上传文件
+		*//**得到图片保存目录的真实路径**//*
+		String path=request.getServletContext().getRealPath("/");
+		System.out.println(path+"/upload"+file.getOriginalFilename());
+		try {
+			file.transferTo(new File(path+"/upload"+file.getOriginalFilename()));
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String img = request.getParameter("userimg");
+		String img = path+"/upload"+file.getOriginalFilename();*/
+		
+		String img = "zheshitupian";
+		String[] rol = request.getParameterValues("rol");
+		List<Role> roles = new ArrayList<Role>();
+		for(int i=0;i<rol.length;i++){
+			int rol_id = Integer.parseInt(rol[i]);
+			Role r = new Role();
+			r.setRole_id(rol_id);
+			roles.add(r);
+		}
+		
+		Admin admin = new Admin();
+		admin.setAdmin_name(name);
+		admin.setAdmin_account(username);
+		admin.setAdmin_psw(psw);
+		admin.setAdmin_photo(img);
+		admin.setAdmin_tel(tel);
+		admin.setAdmin_email(email);
+		admin.setAdmin_role(roles);
+		
+		int i = adminService.insertAdmin(admin);
+		if(i>0){
+			out.print("1");
+		}else{
+			out.print("0");
+		}
+	}
+	/**
+	 * 删除管理员
+	 * @param admin_id
+	 * @param out
+	 */
+	@RequestMapping("/adminDelete.do")
+	public void deleteAdmin(int admin_id,PrintWriter out){
+		Admin admin  = new Admin();
+		admin.setAdmin_id(admin_id);
+		int i = adminService.delAdmin(admin);
+		if(i>0){
+			out.print("1");
+		}else{
+			out.print("0");
+		}
+	}
+	//条件查询管理员
+	@RequestMapping("/adminListBy.do")
+	public String selAdminBy(HttpServletRequest request){
+		int per = Integer.parseInt(request.getParameter("per"));
+		String rol_name = request.getParameter("rolename");
+		List<Admin> la = adminService.getAdminBy(per,rol_name);
+		request.setAttribute("allAdmin_list",la);
+		request.setAttribute("rname",rol_name);
+		request.setAttribute("pname",per);
+		return "view/admin/admin_list";
+	}
+	//处理管理员登录
+		@RequestMapping("/login.do")
+		public String login(@RequestParam("admin_account")String admin_account,
+							@RequestParam("admin_psw")String admin_psw,
+							HttpServletRequest request,
+							HttpSession session){
+			Admin adminLogin = adminService.login(new Admin(admin_account,admin_psw));
+			if(adminLogin.getAdmin_id()!=0){	
+				session.setAttribute("admin", adminLogin);
+				return "view/index";	
+			}else{
+				request.setAttribute("errorMsg", "您输入的账号和密码不匹配，请重新输入！");
+				return "redirect:../login.jsp";
+			}
+		}
+		//处理管理员修改信息（姓名，电话，email）
+			@RequestMapping("/modifyAdminInfo.do")
+			public String ModifyAdminInfo(@RequestParam("admin_id")String admin_id,
+										@RequestParam("admin_name")String admin_name,
+										@RequestParam("admin_email")String admin_email,
+										@RequestParam("admin_tel")String admin_tel,
+										Model model){
+				Admin adminModi = new Admin(Integer.parseInt(admin_id),admin_name,admin_tel,admin_email);
+				int m = adminService.modifyAdminInfo(adminModi);
+				if(m>=0){
+					model.addAttribute("adminModi", adminModi);
+					model.addAttribute("msg", 1);//1表示修改信息成功
+				}else{
+					model.addAttribute("msg", 0);//0表示修改信息失败
+				}
+				return "view/user/user_info"; 
+			}
+			//处理管理员修改密码
+			@RequestMapping("/modifyAdminPsw.do")
+			public String ModifyAdminPsw(@RequestParam("admin_id")String admin_id,
+										@RequestParam("newpsw1")String admin_psw,
+										Model model
+										){
+				int m = adminService.modifyAdminPsw(new Admin(Integer.parseInt(admin_id),admin_psw));
+				if(m>=0){
+					model.addAttribute("successMsg", "修改密码成功,进入登录界面！");
+					return "redirect:/view/login.jsp";	
+				}else{
+					model.addAttribute("failMsg", "对不起，修改密码失败！");
+					return "redirect:/view/user/user_modi_pwd.jsp";
+				}
+			}
+			//密码重置
+			@RequestMapping("/updateAdminPsw.do")
+			public void updateAdminPsw(HttpServletRequest request,PrintWriter out){
+				String psw[] = request.getParameterValues("psw[]");
+				List<Admin> admins = new ArrayList<Admin>();
+				for(int i = 0;i<psw.length;i++){
+					Admin admin = new Admin();
+					admin.setAdmin_id(Integer.parseInt(psw[i]));
+					admin.setAdmin_psw("123");
+					admins.add(admin);
+				}
+				int i = adminService.updateAdminPsw(admins);
+				if(i>0){
+					out.print("1");
+				}else{
+					out.print("0");
+				}
+			}
+}

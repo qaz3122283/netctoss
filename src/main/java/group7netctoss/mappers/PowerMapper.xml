@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.PowerDao">
+	<sql id="powNum">p.pow_id,p.pow_name,p.pow_class,p.pow_url</sql>
+	
+	<select id="powByRole" resultType="Power">
+		select  <include refid="powNum" />
+		from powers p,role_powers rp
+		where p.pow_id=rp.power_id and rp.role_id=#{role_id} 
+	</select>
+	<!--  	通过角色集合查询权限 -->
+	<select id="selectPowerById" resultType="Power">
+		select * 
+  		from powers p 
+  		where pow_id in(
+  			select power_id 
+  			from role_powers rp 
+  			where role_id in
+  				 <foreach item="admin_role" index="index" collection="list"
+      				open="(" separator="," close=")">
+       					#{admin_role.role_id}
+ 				 </foreach>
+  		) 
+	</select>
+</mapper>

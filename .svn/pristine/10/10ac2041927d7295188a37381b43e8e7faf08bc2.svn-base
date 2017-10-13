@@ -1,0 +1,24 @@
+package group7netctoss.dao;
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Fee;
+import group7netctoss.entity.Service;
+
+public interface ReportDao {
+	/**
+	 * 查询客户每位客户每月累计使用时长
+	 * @return
+	 */
+	public Account selectAccountMonthtime();
+	/**
+	 * 查询每台服务器上累计时长最高的前三名客户
+	 * @return
+	 */
+	public Service selectSeripUseTimeRank();
+	/**
+	 * 查询每台服务器每种资费标准的使用次数
+	 * @return
+	 */
+	public Fee selectSeripFtypeCount();
+
+}

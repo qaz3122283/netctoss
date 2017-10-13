@@ -1,0 +1,65 @@
+﻿<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html >
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+        <%@include file ="/view/include/link.jsp"%>  
+    </head>
+    <body onload="initialYearAndMonth();">
+         <%@include file ="/view/include/header.jsp"%>
+        <!--主要区域开始-->
+        <div id="main">
+            <form action="" method="">
+                <!--查询-->
+                <div class="search_add">                        
+                    <div>账务账号：<span class="readonly width70">${detail.ser.account.acc_login }</span></div>                            
+                    <div>OS 账号：<span class="readonly width100">${detail.ser.ser_os }</span></div>
+                    <div>服务器 IP：<span class="readonly width100">${detail.ser.ser_ip }</span></div>
+                    <div>计费时间：<span class="readonly width70"><fmt:formatDate value="${detail.item.item_month}" pattern="yyyy年MM月"/></span></div>
+                    <div>费用：<span class="readonly width70">${detail.item.item_cost}</span></div>
+                    <input type="button" value="返回" class="btn_add" onclick="location.href='${pageContext.request.contextPath }/billItem/billItemList.do?bill_id=${bill_id }';" />
+                </div>  
+                <!--数据区域：用表格展示数据-->     
+                <div id="data">            
+                    <table id="datalist">
+                        <tr>
+                            <th class="width150">客户登录 IP</th>
+                            <th class="width150">登入时刻</th>
+                            <th class="width150">登出时刻</th>
+                            <th class="width100">时长（秒）</th>
+                            <th class="width150">费用</th>
+                            <th>资费</th>
+                        </tr>
+                        <c:forEach items="${lde}" var="det">
+	                        <tr>
+	                            <td>${det.det_ip }</td>
+	                            <td><fmt:formatDate value="${det.det_intime}" pattern="yyyy/MM/dd　HH:mm:ss"/></td>
+	                            <td><fmt:formatDate value="${det.det_outtime}" pattern="yyyy/MM/dd　HH:mm:ss"/></td>
+	                            <td>${det.duration }</td>
+	                            <td>${det.det_cost }</td>
+	                            <td>${det.ser.fee.fee_name }</td>
+	                        </tr>
+	                    </c:forEach>
+                    </table>
+                </div>
+                <!--分页-->
+                <div id="pages">
+        	        <a href="#">上一页</a>
+                    <a href="#" class="current_page">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">下一页</a>
+                </div>                    
+            </form>
+        </div>
+        <!--主要区域结束-->
+        <div id="footer">
+           
+        </div>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.AdminDao">
+	<sql id = "adminNum">a.admin_id,a.admin_name,a.admin_account,a.admin_tel,a.admin_photo,a.admin_email,a.admin_psw,a.admin_date</sql>
+	
+	<resultMap type="Admin" id="Admin">
+		<id property="admin_id" column="admin_id" />
+		<collection property="admin_role" select="group7netctoss.dao.RoleDao.roleByAdmin" column="admin_id">
+			<id property="role_id" column="role_id"/>
+			<result property="role_name" column="role_name"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selAllAdmin" resultMap="Admin">
+		select <include refid="adminNum" />
+		from admin a
+	</select>
+	
+	<select id="selAdminByid" resultMap="Admin">
+		select <include refid="adminNum" />
+		from admin a
+		where a.admin_id=#{admin_id}
+	</select>
+</mapper>

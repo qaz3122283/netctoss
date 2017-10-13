@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.ServiceDao">
+	<insert id="insertService" >
+		insert into service(acc_id,fee_id,ser_os,ser_psw,ser_ip)
+		value(#{acc_id},#{fee_id},#{ser_os},#{ser_psw},#{ser_ip})
+	</insert>
+	
+	<update id="deleteService">
+		update service set ser_state=#{ser_state},ser_recordtime=now() where ser_id=#{ser_id}
+	</update>
+	
+	<update id="updateService">
+		update service set fee_id=#{fee_id} where ser_id=#{ser_id}
+	</update>
+	
+	
+	
+	<select id="selectService" resultType="Service">
+		select * from service
+	</select>
+	
+	<select id="selectServiceByCondi" resultType="Service">
+		select * from service 
+		<where>
+			<if test='ser_os!=""'>
+				ser_os=#{ser_os}
+			</if>
+			<if test='ser_ip!=""'>
+				and ser_ip=#{ser_ip}
+			</if>
+			<if test='acc_idcard!=""'>
+				and acc_idcard=#{acc_idcard}
+			</if>
+			<if test='ser_state!="10"'>
+				and ser_state=#{ser_state}
+			</if>
+		</where>
+	</select>
+	
+	
+	<select id="selectServiceById" resultType="Service">
+		select * from service where ser_id=#{ser_id}
+	</select>
+	
+	<select id="selectServiceByAccount" resultType="Service">
+		select * from service where ser_os=#{ser_os};
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,64 @@
+package group7netctoss.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import group7netctoss.dao.FeeDao;
+import group7netctoss.entity.Fee;
+import group7netctoss.service.FeeService;
+
+
+
+
+@Service("feeService")
+public class FeeServiceImpl implements FeeService {
+	
+	@Resource
+	private FeeDao feeDao;
+	
+	public int addFee(Fee fee) {
+		
+		return feeDao.insertFee(fee);
+	}
+
+	public int delFee(Fee fee) {
+		
+		return feeDao.deleteFee(fee);
+	}
+
+	public int update(Fee fee) {
+		
+		return feeDao.updateFee(fee);
+	}
+
+	public List<Fee> getAllFee(Map<String,Object> map) {
+		
+		return feeDao.selectAllFee(map);
+	}
+
+	public Fee selectFeeByID(Fee fee) {
+		
+		return feeDao.selectFeeByID(fee);
+	}
+
+	public int updateFeeState(Fee fee) {
+		
+		return feeDao.updateFeeState(fee);
+	}
+
+	public List<Fee> selectAllFeeIDName() {
+		
+		return feeDao.selectAllFeeIDName();
+	}
+
+	@Override
+	public int getAllCounts() {
+		
+		return feeDao.selectAllCounts();
+	}
+
+}

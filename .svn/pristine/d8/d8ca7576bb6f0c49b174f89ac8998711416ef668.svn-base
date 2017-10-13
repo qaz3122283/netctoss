@@ -1,0 +1,84 @@
+/**
+ * 
+ */
+package group7netctoss.entity;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+/**
+ * 管理员表
+ * @author Administrator
+ *
+ */
+public class Admin {
+	private int admin_id;//管理员ID
+	private String admin_name;//管理员姓名
+	private String admin_account;//管理员登录账号
+	private String admin_tel;//管理员电话
+	private String admin_photo;//管理员照片
+	private String admin_email;//管理员邮箱
+	private String admin_psw;//管理员密码
+	private Timestamp admin_date;//创建时间
+	private List<Role> admin_role;//管理员角色集合
+	/**
+	 * 
+	 */
+	public Admin() {
+		super();
+	}
+	public int getAdmin_id() {
+		return admin_id;
+	}
+	public void setAdmin_id(int admin_id) {
+		this.admin_id = admin_id;
+	}
+	public String getAdmin_name() {
+		return admin_name;
+	}
+	public void setAdmin_name(String admin_name) {
+		this.admin_name = admin_name;
+	}
+	public String getAdmin_account() {
+		return admin_account;
+	}
+	public void setAdmin_account(String admin_account) {
+		this.admin_account = admin_account;
+	}
+	public String getAdmin_tel() {
+		return admin_tel;
+	}
+	public void setAdmin_tel(String admin_tel) {
+		this.admin_tel = admin_tel;
+	}
+	public String getAdmin_photo() {
+		return admin_photo;
+	}
+	public void setAdmin_photo(String admin_photo) {
+		this.admin_photo = admin_photo;
+	}
+	public String getAdmin_email() {
+		return admin_email;
+	}
+	public void setAdmin_email(String admin_email) {
+		this.admin_email = admin_email;
+	}
+	public String getAdmin_psw() {
+		return admin_psw;
+	}
+	public void setAdmin_psw(String admin_psw) {
+		this.admin_psw = admin_psw;
+	}
+	public List<Role> getAdmin_role() {
+		return admin_role;
+	}
+	public void setAdmin_role(List<Role> admin_role) {
+		this.admin_role = admin_role;
+	}
+	public Timestamp getAdmin_date() {
+		return admin_date;
+	}
+	public void setAdmin_date(Timestamp admin_date) {
+		this.admin_date = admin_date;
+	}
+}

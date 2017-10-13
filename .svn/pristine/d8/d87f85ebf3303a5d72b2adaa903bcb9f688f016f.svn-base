@@ -1,0 +1,63 @@
+package group7netctoss.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Service;
+import group7netctoss.service.ReportService;
+
+@Controller
+@RequestMapping("/report")
+public class ReportController {
+	@Resource
+	private ReportService reportService;
+	
+	//处理客户使用时长请求(接口进入)
+	@RequestMapping("/ReportListAction.do")
+	public String ReportListAction(Model model,HttpSession session){
+		List<Account> allAccounts = new ArrayList<Account>();
+		allAccounts = reportService.getAccountMonthtime();
+		session.setAttribute("allAccounts", allAccounts);
+		return "view/report/report_list";
+	}
+	//处理客户使用时长请求(ajax)
+	@RequestMapping("/ReportListAction1.do")
+	@ResponseBody
+	public Map<String,Object> AllAccountMonthtime1(){
+		System.out.println("/ReportListAction1.do");
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Account> allAccounts = new ArrayList<Account>();
+		allAccounts = reportService.getAccountMonthtime();
+		map.put("allAccounts",allAccounts);
+		return map;
+	}
+	
+	//处理每台服务器上累计时长最高的前三位客户请求
+	@RequestMapping("/ReportListAction2.do")
+	@ResponseBody
+	public Map<String,Object> AllSeripUseTimeRank(){
+		System.out.println("/ReportListAction2.do");
+		Map<String,Object> map = new HashMap<String,Object>();
+		List<Service> allServices = new ArrayList<Service>();
+		allServices = reportService.getSeripUseTimeRank();
+//		System.out.println("allServices.get(0):"+allServices.get(0));
+		map.put("allServices",allServices);
+		return map;
+	}
+	
+	//处理每台服务器上每种资费标准使用的次数请求
+	public String AllSeripFtypeCount(){
+		return "view/report/report_list";
+	}
+}

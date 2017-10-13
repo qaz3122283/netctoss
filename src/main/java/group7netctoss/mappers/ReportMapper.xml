@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="group7netctoss.dao.ReportDao">
+	<!-- 查询客户每位客户每月累计使用时长 -->
+	<resultMap type="Report" id="report1">
+		<result property="acount_month_sumtime" column="accontmonthsumtime"/>
+		<association property="account" javaType="Account">
+			<result property="acc_id" column="acc_id"/>
+			<result property="acc_name" column="acc_name"/>
+			<result property="acc_idcard" column="acc_idcard"/>
+			<result property="acc_login" column="acc_login"/>
+			<result property="acc_tel" column="acc_tel"/>
+		</association>
+		<association property="bill" javaType="Bill">
+			<result property="bill_id" column="bill_id"/>
+			<result property="bill_month" column="bill_month"/>
+		</association>
+	</resultMap>
+	<select id="selectAccountMonthtime" resultMap="report1">
+		SELECT * FROM account_month_sumtime 
+	</select>
+	
+	<!--查询每台服务器上累计时长最高的前三名客户 -->
+	<resultMap type="Report" id="report2">
+		<result property="ser_ip_sumtime" column="ipsumtime"/>
+		<association property="service" javaType="Service">
+			<result property="ser_id" column="ser_id"/>
+			<result property="ser_ip" column="ser_ip"/>
+		</association>
+		<association property="account" javaType="Account">
+			<result property="acc_id" column="acc_id"/>
+			<result property="acc_name" column="acc_name"/>
+			<result property="acc_idcard" column="acc_idcard"/>
+			<result property="acc_login" column="acc_login"/>
+		</association>
+	</resultMap>
+	<select id="selectSeripUseTimeRank" resultMap="report2">
+		SELECT * FROM serip_usetime_rank
+	</select>
+	
+	<!-- 查询每台服务器每种资费标准的使用次数	 -->
+	<select id="selectSeripFtypeCount">
+	
+	</select>
+</mapper>

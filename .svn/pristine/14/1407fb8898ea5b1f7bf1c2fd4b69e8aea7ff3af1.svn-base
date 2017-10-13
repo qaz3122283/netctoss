@@ -1,0 +1,70 @@
+/**
+ * 
+ */
+package group7netctoss.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.http.HttpRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import group7netctoss.entity.Account;
+import group7netctoss.entity.Bill;
+import group7netctoss.entity.PageCount;
+import group7netctoss.service.BillService;
+
+
+/**
+ * 账单模块的Servlet
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/bill")
+public class BillController {
+	
+	@Resource
+	private BillService billService;
+	
+/*	@RequestMapping("/BillListAction")
+	public String showAllBills(Model model,PageCount pc){
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("pc", pc);
+		List<Bill> lb = billService.getAllBills(map);
+		pc.setTotleNumber(billService.getBillsCount(map));
+		model.addAttribute("pc", pc);
+		model.addAttribute("lb", lb);
+		return "view/bill/bill_list";
+	}*/
+	
+	@RequestMapping("/BillListAction")
+	public String selBillsByCondition(Account acc,PageCount pc,HttpServletRequest req,Model model){
+		Bill bill = new Bill();
+		bill.setAcc(acc);
+		String year=req.getParameter("year");;
+		String month=null;
+		if(!"-1".equals(req.getParameter("month"))){
+			month = req.getParameter("month");
+		}
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("bill", bill);
+		map.put("year", year);
+		map.put("month", month);
+		pc.setTotleNumber(billService.getBillsCount(map));
+		map.put("pc", pc);
+		model.addAttribute("lb", billService.getBillsByCondition(map));
+		PageCount.setting(pc);
+		model.addAttribute("pc", pc);
+		model.addAttribute("ac", acc);
+		model.addAttribute("month", req.getParameter("month"));
+		model.addAttribute("year", year);
+		return "view/bill/bill_list";
+	}
+}
